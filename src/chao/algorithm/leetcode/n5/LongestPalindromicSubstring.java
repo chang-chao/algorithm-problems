@@ -2,28 +2,36 @@ package chao.algorithm.leetcode.n5;
 
 public class LongestPalindromicSubstring {
   public String longestPalindrome(String s) {
-    int currentResultPos = 0, currentResultOffset = 0;
-    char[] sCharArray = s.toCharArray();
-    for (int pos = 0; pos < s.length(); pos++) {
-
-      int offset = 0;
-      for (int i = 1; i <= Math.min(pos, s.length() - pos - 1); i++) {
-        if (sCharArray[pos - i] == sCharArray[pos + i]) {
-          offset++;
-        } else {
-          break;
+    if (s.isEmpty()) {
+      return "";
+    }
+    int currentPos = 0;
+    int currentLen = 1;
+    char[] charArray = s.toCharArray();
+    for (int i = 0; i < s.length(); i++) {
+      for (int j = i + 1; j < charArray.length; j++) {
+        int len = j - i;
+        if (len <= currentLen) {
+          continue;
+        }
+        boolean palindromic = isPalindromic(charArray, i, len);
+        if (palindromic) {
+          currentLen = len;
+          currentPos = i;
         }
       }
-
-      if ((offset) > currentResultOffset) {
-        currentResultPos = pos;
-        currentResultOffset = offset;
-      }
-
     }
 
-    return s.substring(currentResultPos - currentResultOffset,
-        currentResultPos + currentResultOffset + 1);
+    return s.substring(currentPos, currentPos + currentLen );
 
+  }
+
+  private boolean isPalindromic(char[] s, int pos, int len) {
+    for (int i = 0; i < len; i++) {
+      if (s[pos + i] != s[pos + len - 1 - i]) {
+        return false;
+      }
+    }
+    return true;
   }
 }
