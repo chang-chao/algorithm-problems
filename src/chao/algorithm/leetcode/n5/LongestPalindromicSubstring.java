@@ -10,7 +10,7 @@ public class LongestPalindromicSubstring {
     char[] charArray = s.toCharArray();
     for (int i = 0; i < s.length(); i++) {
       for (int j = i + 1; j < charArray.length; j++) {
-        int len = j - i;
+        int len = j - i + 1;
         if (len <= currentLen) {
           continue;
         }
@@ -22,12 +22,12 @@ public class LongestPalindromicSubstring {
       }
     }
 
-    return s.substring(currentPos, currentPos + currentLen );
+    return s.substring(currentPos, currentPos + currentLen);
 
   }
 
   private boolean isPalindromic(char[] s, int pos, int len) {
-    for (int i = 0; i < len; i++) {
+    for (int i = 0; i < len / 2; i++) {
       if (s[pos + i] != s[pos + len - 1 - i]) {
         return false;
       }
