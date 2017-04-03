@@ -12,7 +12,7 @@ public class StringToInteger {
       }
     }
 
-    int result = 0;
+    long result = 0;
     int sign = 1;
 
     if (startIndex < str.length()) {
@@ -21,8 +21,6 @@ public class StringToInteger {
         startIndex++;
       } else if (str.charAt(startIndex) == '+') {
         startIndex++;
-      } else if (!isDigit(str.charAt(startIndex))) {
-        return 0;
       }
     }
 
@@ -31,31 +29,20 @@ public class StringToInteger {
       int lastDigit = c - '0';
 
       // out of range check
-      if (sign > 0) {
-        if (result > 214748364) {
-          return 2147483647;
-        }
-        if (result == 214748364) {
-          if (lastDigit > 7) {
-            return 2147483647;
-          }
-        }
-
-      } else {
-        if (result > 214748364) {
-          return -2147483648;
-        }
-        if (result == 214748364) {
-          if (lastDigit > 8) {
-            return -2147483648;
-          }
-        }
+      long r = result * 10 + lastDigit;
+      long tempResult = r * sign;
+      if (tempResult > Integer.MAX_VALUE) {
+        return Integer.MAX_VALUE;
       }
-      result = result * 10 + lastDigit;
+      if (tempResult < Integer.MIN_VALUE) {
+        return Integer.MIN_VALUE;
+
+      }
+      result = r;
       startIndex++;
     }
 
-    return result * sign;
+    return (int) (result * sign);
   }
 
   private static boolean isDigit(char c) {
