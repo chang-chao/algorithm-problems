@@ -2,8 +2,6 @@ package chao.algorithm.leetcode.n30;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,16 +9,17 @@ import java.util.Set;
 
 public class SubstringWithConcatenationOfAllWords {
   public List<Integer> findSubstring(String s, String[] words) {
-    Map<String, Set<Integer>> wordToIndexMap = new HashMap<>();
+    Map<String, Integer> wordToIndexMap = new HashMap<>();
 
     List<Integer> result = new ArrayList<>();
 
     for (int i = 0; i < words.length; i++) {
       String word = words[i];
       if (!wordToIndexMap.containsKey(word)) {
-        wordToIndexMap.put(word, new HashSet<>());
+        wordToIndexMap.put(word, 1);
+      } else {
+        wordToIndexMap.put(word, wordToIndexMap.get(word) + 1);
       }
-      wordToIndexMap.get(word).add(i);
     }
 
     int wordSize = words[0].length();
@@ -36,25 +35,24 @@ public class SubstringWithConcatenationOfAllWords {
     return result;
   }
 
-  private boolean match(char[] sCharArray, int index, Map<String, Set<Integer>> wordToIndexMap, int wordSize,
+  private boolean match(char[] sCharArray, int index, Map<String, Integer> wordToIndexMap, int wordSize,
       int wordCount) {
     int stringLen = sCharArray.length - index;
     if (stringLen < wordCount * wordSize) {
       return false;
     }
 
-    Map<String, List<Integer>> remainingWordMap = new HashMap<>();
-    Set<Entry<String, Set<Integer>>> entrySet = wordToIndexMap.entrySet();
-    for (Entry<String, Set<Integer>> entry : entrySet) {
-      remainingWordMap.put(entry.getKey(), new LinkedList<>(entry.getValue()));
+    Map<String, Integer> remainingWordMap = new HashMap<>();
+    Set<Entry<String, Integer>> entrySet = wordToIndexMap.entrySet();
+    for (Entry<String, Integer> entry : entrySet) {
+      remainingWordMap.put(entry.getKey(), entry.getValue());
     }
 
     for (int i = 0; i < wordCount; i++) {
       String str = new String(sCharArray, index + wordSize * i, wordSize);
       if (remainingWordMap.containsKey(str)) {
-        List<Integer> indexList = remainingWordMap.get(str);
-        indexList.remove(0);
-        if (indexList.isEmpty()) {
+        remainingWordMap.put(str, remainingWordMap.get(str) - 1);
+        if (remainingWordMap.get(str) == 0) {
           remainingWordMap.remove(str);
         }
       } else {
