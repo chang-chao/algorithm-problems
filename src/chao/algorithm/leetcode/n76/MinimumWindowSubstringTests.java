@@ -8,7 +8,7 @@ public class MinimumWindowSubstringTests {
 
   @Test
   public void tests() {
-   // Assert.assertEquals("BANC", sut.minWindow("ADOBECODEBANC", "ABC"));
+    Assert.assertEquals("BANC", sut.minWindow("ADOBECODEBANC", "ABC"));
     Assert.assertEquals("aa", sut.minWindow("aa", "aa"));
   }
 }

@@ -2,17 +2,18 @@ package chao.algorithm.leetcode.n7;
 
 public class ReverseInteger {
   public int reverse(final int x) {
-    long result = 0;
+    int result = 0;
 
-    int sign = x > 0 ? 1 : -1;
-
-    Long processingX = Math.abs((long) x);
+    int processingX = x;
     while (processingX != 0) {
-      long digit = processingX % 10;
-      result = result * 10 + digit;
+      int digit = processingX % 10;
+      int newResult = result * 10 + digit;
+      if ((newResult - digit) / 10 != result) {
+        return 0;
+      }
+      result = newResult;
       processingX = processingX / 10;
     }
-    result = result * sign;
-    return (result > Integer.MAX_VALUE || result < Integer.MIN_VALUE) ? 0 : (int) result;
+    return result;
   }
 }
