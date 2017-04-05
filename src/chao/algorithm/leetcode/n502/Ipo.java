@@ -1,29 +1,30 @@
 package chao.algorithm.leetcode.n502;
 
+import java.util.Arrays;
 import java.util.PriorityQueue;
 
 public class Ipo {
   public int findMaximizedCapital(int k, int W, final int[] Profits, final int[] Capital) {
     int size = Profits.length;
-    PriorityQueue<int[]> capQueue = new PriorityQueue<>(size, (o1, o2) -> Capital[o1[1]] - Capital[o2[1]]);
-    PriorityQueue<int[]> profitQueue = new PriorityQueue<>(size, (o1, o2) -> Profits[o2[1]] - Profits[o1[1]]);
+    Integer[] capOrder = new Integer[size];
     for (int i = 0; i < size; i++) {
-      capQueue.add(new int[] { Capital[i], i });
+      capOrder[i] = i;
     }
+    Arrays.sort(capOrder, (o1, o2) -> Capital[o1] - Capital[o2]);
+
+    PriorityQueue<Integer> profitQueue = new PriorityQueue<>(size);
     int currentW = W;
     int pSize = 0;
+    int currentCapOrder = 0;
     while (pSize < k) {
-      while (!capQueue.isEmpty() && capQueue.peek()[0] <= currentW) {
-        int[] project = capQueue.poll();
-        int index = project[1];
-        profitQueue.add(new int[] { Profits[index], index });
+      while (currentCapOrder < size && Capital[capOrder[currentCapOrder]] <= currentW) {
+        profitQueue.add(-Profits[capOrder[currentCapOrder++]]);
       }
-
-      int[] nextProject = profitQueue.poll();
-      if (nextProject == null) {
+      if (profitQueue.isEmpty()) {
         return currentW;
       }
-      currentW += nextProject[0];
+
+      currentW -= profitQueue.poll();
       pSize++;
     }
     return currentW;
