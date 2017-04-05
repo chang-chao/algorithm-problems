@@ -1,85 +1,79 @@
 package chao.algorithm.leetcode.n37;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 public class SudokuSolver {
-
-  static Set<Character> allCharctors = new HashSet<>();
-  static {
-    for (char c = '1'; c <= '9'; c++) {
-      allCharctors.add(c);
-    }
-
-  }
-
-  public static class Coordinate {
-    int x;
-    int y;
-
-    public Coordinate(int x, int y) {
-      this.x = x;
-      this.y = y;
-    }
-  }
-
   public void solveSudoku(char[][] board) {
 
-    List<Coordinate> emptyCells = new LinkedList<>();
+    int[] emptyXs = new int[81];
+    int[] emptyYs = new int[81];
+    int emptyCount = 0;
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
         if (board[i][j] == '.') {
-          emptyCells.add(new Coordinate(i, j));
+          emptyXs[emptyCount] = i;
+          emptyYs[emptyCount] = j;
+          emptyCount++;
+
         }
       }
     }
-    solveSudoku(board, emptyCells);
+    solveSudoku(board, emptyXs, emptyYs, 0, emptyCount);
   }
 
-  private boolean solveSudoku(char[][] board, List<Coordinate> emptyCells) {
-    if (emptyCells.isEmpty()) {
+  private boolean solveSudoku(char[][] board, int[] emptyXs, int[] emptyYs, int offset, int maxIndexExclusive) {
+    if (offset == maxIndexExclusive) {
       return true;
     }
 
-    Coordinate emptyCell = emptyCells.get(0);
-    Set<Character> candidatesChars = findCandidateChars(board, emptyCell);
-    if (candidatesChars.isEmpty()) {
+    int candidatesChars = findCandidateChars(board, emptyXs[offset], emptyYs[offset]);
+    if (candidatesChars == 0) {
       return false;
     }
 
-    emptyCells.remove(0);
-    for (Character c : candidatesChars) {
-      board[emptyCell.x][emptyCell.y] = c;
+    char c = '1';
+    while (candidatesChars != 0) {
+      if ((candidatesChars & 1) == 1) {
+        board[emptyXs[offset]][emptyYs[offset]] = c;
 
-      if (solveSudoku(board, emptyCells)) {
-        return true;
+        if (solveSudoku(board, emptyXs, emptyYs, offset + 1, maxIndexExclusive)) {
+          return true;
+        }
       }
+
+      c++;
+      candidatesChars = (candidatesChars >> 1);
     }
 
-    board[emptyCell.x][emptyCell.y] = '.';
-    emptyCells.add(0, emptyCell);
+    board[emptyXs[offset]][emptyYs[offset]] = '.';
     return false;
   }
 
-  private Set<Character> findCandidateChars(char[][] board, Coordinate emptyCell) {
-    Set<Character> candidates = new HashSet<>(allCharctors);
+  private int findCandidateChars(char[][] board, int x, int y) {
+    int candidate = 0b111111111;
 
+    int used = 0;
     for (int i = 0; i < 9; i++) {
-      candidates.remove(board[i][emptyCell.y]);
-    }
-
-    for (int i = 0; i < 9; i++) {
-      candidates.remove(board[emptyCell.x][i]);
-    }
-
-    for (int i = emptyCell.x / 3 * 3; i < emptyCell.x / 3 * 3 + 3; i++) {
-      for (int j = emptyCell.y / 3 * 3; j < emptyCell.y / 3 * 3 + 3; j++) {
-        candidates.remove(board[i][j]);
+      char c = board[i][y];
+      if (c != '.') {
+        used |= 1 << (c - '1');
       }
     }
 
-    return candidates;
+    for (int i = 0; i < 9; i++) {
+      char c = board[x][i];
+      if (c != '.') {
+        used |= 1 << (c - '1');
+      }
+    }
+
+    for (int i = x / 3 * 3; i < x / 3 * 3 + 3; i++) {
+      for (int j = y / 3 * 3; j < y / 3 * 3 + 3; j++) {
+        char c = board[i][j];
+        if (c != '.') {
+          used |= 1 << (c - '1');
+        }
+      }
+    }
+
+    return candidate ^ used;
   }
 }
