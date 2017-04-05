@@ -12,20 +12,18 @@ public class Ipo {
     }
     Arrays.sort(capOrder, (o1, o2) -> Capital[o1] - Capital[o2]);
 
-    PriorityQueue<Integer> profitQueue = new PriorityQueue<>(size);
+    PriorityQueue<Integer> profitQueue = new PriorityQueue<>(size, (o1, o2) -> o2 - o1);
     int currentW = W;
-    int pSize = 0;
     int currentCapOrder = 0;
-    while (pSize < k) {
+    for (int pSize = 0; pSize < k; pSize++) {
       while (currentCapOrder < size && Capital[capOrder[currentCapOrder]] <= currentW) {
-        profitQueue.add(-Profits[capOrder[currentCapOrder++]]);
+        profitQueue.add(Profits[capOrder[currentCapOrder++]]);
       }
       if (profitQueue.isEmpty()) {
         return currentW;
       }
 
-      currentW -= profitQueue.poll();
-      pSize++;
+      currentW += profitQueue.poll();
     }
     return currentW;
   }
