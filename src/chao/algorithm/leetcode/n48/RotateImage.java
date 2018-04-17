@@ -4,7 +4,7 @@ import java.util.stream.IntStream;
 
 public class RotateImage {
   public void rotate(int[][] matrix) {
-    IntStream.range(0, matrix.length / 2).parallel().forEach(circleIndex -> copySingleCircle(matrix, circleIndex));
+    IntStream.range(0, matrix.length / 2).forEach(circleIndex -> copySingleCircle(matrix, circleIndex));
   }
 
   private void copySingleCircle(int[][] matrix, int circleIndex) {
