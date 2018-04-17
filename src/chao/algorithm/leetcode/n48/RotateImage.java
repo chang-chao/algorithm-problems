@@ -9,25 +9,25 @@ public class RotateImage {
 
       for (int loopIndexInCircle = 0; loopIndexInCircle < loopCountInCircle; loopIndexInCircle++) {
 
-        int[] prevPixel = { circleIndex, circleIndex + loopIndexInCircle };
-        int startPixelBackup = matrix[prevPixel[0]][prevPixel[1]];
-        int[] nextPixel = { n - 1 - prevPixel[1], prevPixel[0] };
+        int[] from = { circleIndex, circleIndex + loopIndexInCircle };
+        int startPixelBackup = matrix[from[0]][from[1]];
+        int[] to = { n - 1 - from[1], from[0] };
 
-        matrix[prevPixel[0]][prevPixel[1]] = matrix[nextPixel[0]][nextPixel[1]];
+        matrix[from[0]][from[1]] = matrix[to[0]][to[1]];
 
-        prevPixel[0] = nextPixel[0];
-        prevPixel[1] = nextPixel[1];
-        nextPixel[0] = n - 1 - prevPixel[1];
-        nextPixel[1] = prevPixel[0];
-        matrix[prevPixel[0]][prevPixel[1]] = matrix[nextPixel[0]][nextPixel[1]];
+        from[0] = to[0];
+        from[1] = to[1];
+        to[0] = n - 1 - from[1];
+        to[1] = from[0];
+        matrix[from[0]][from[1]] = matrix[to[0]][to[1]];
 
-        prevPixel[0] = nextPixel[0];
-        prevPixel[1] = nextPixel[1];
-        nextPixel[0] = n - 1 - prevPixel[1];
-        nextPixel[1] = prevPixel[0];
-        matrix[prevPixel[0]][prevPixel[1]] = matrix[nextPixel[0]][nextPixel[1]];
+        from[0] = to[0];
+        from[1] = to[1];
+        to[0] = n - 1 - from[1];
+        to[1] = from[0];
+        matrix[from[0]][from[1]] = matrix[to[0]][to[1]];
 
-        matrix[nextPixel[0]][nextPixel[1]] = startPixelBackup;
+        matrix[to[0]][to[1]] = startPixelBackup;
       }
 
     }
